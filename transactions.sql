@@ -38,7 +38,7 @@ WHERE instrument NOT LIKE '%PENSION%'
 UNION 
 
 SELECT
-    "TOTAL", date('now'), null, null, null, SUM(c.quantity * i.last_price)
+    "TOTAL", date('now'), null, null, null, ROUND(SUM(c.quantity * i.last_price), 2)
 FROM current_balance c 
 INNER JOIN instruments i ON c.instrument = i.instrument
 
