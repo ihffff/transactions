@@ -38,7 +38,7 @@ WHERE instrument NOT LIKE '%PENSION%'
 UNION 
 
 SELECT
-    "TOTAL", date('now'), null, null, null, SUM(last_value)
+    "TOTAL", date('now'), null, null, null, printf("%.2f", SUM(last_value))
 FROM current_balance
 
 ORDER BY settlement_date;
@@ -54,3 +54,29 @@ WHERE t.instrument NOT LIKE '%PENSION%'
 GROUP BY t.instrument
 HAVING last_value > 0
 ORDER BY t.instrument;
+
+-- cash_flow
+CREATE VIEW cash_flow_2021
+AS 
+
+SELECT 
+    instrument, settlement_date, quantity AS quantity, price, price_currency AS currency, cash_flow 
+FROM transactions 
+WHERE instrument NOT LIKE '%PENSION%'
+	AND settlement_date >= "2021-01-01"
+
+UNION 
+
+SELECT
+	"INITIAL BALANCE", "2021-01-01", NULL, NULL, "EUR", printf("%.2f", SUM(cash_flow))
+FROM transactions 
+WHERE instrument NOT LIKE '%PENSION%'
+	AND settlement_date < "2021-01-01"
+
+UNION 
+
+SELECT
+    "TOTAL", date('now'), NULL, NULL, "EUR", printf("%.2f", SUM(last_value))
+FROM current_balance
+
+ORDER BY settlement_date

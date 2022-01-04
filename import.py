@@ -90,7 +90,7 @@ for file in sorted(glob.glob("transactions/*.csv")):
 # TODO would be nice to add price ...
 cur.execute(
     """INSERT OR IGNORE INTO instruments (instrument) 
-       SELECT DISTINCT instrument FROM current_balance"""
+       SELECT DISTINCT instrument FROM transactions"""
 )
 
 con.commit()
